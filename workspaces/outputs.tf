@@ -22,3 +22,18 @@ output "project_name" {
   description = "The project name"
   value       = data.tfe_project.project.name
 }
+
+output "vcs_repository" {
+  description = "The connected VCS repository"
+  value       = var.github_repository
+}
+
+output "vcs_branch" {
+  description = "The VCS branch used by the workspace"
+  value       = var.vcs_branch
+}
+
+output "working_directory" {
+  description = "The working directory for Terraform runs"
+  value       = var.working_directory
+}

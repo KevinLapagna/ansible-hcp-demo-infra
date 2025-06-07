@@ -37,10 +37,13 @@ resource "tfe_workspace" "ansible_hcp_demo" {
   speculative_enabled          = true
   structured_run_output_enabled = true
   
-  # VCS configuration if needed (optional)
-  # vcs_repo {
-  #   identifier     = "your-org/your-repo"
-  #   branch         = "main"
-  #   oauth_token_id = var.oauth_token_id
-  # }
+  # VCS configuration for GitHub App integration
+  vcs_repo {
+    identifier                 = var.github_repository
+    branch                    = var.vcs_branch
+    github_app_installation_id = var.github_app_installation_id
+  }
+  
+  # Set working directory for Terraform runs
+  working_directory = var.working_directory
 }

@@ -7,5 +7,8 @@ organization_name = "lennart-org"
 project_name      = "RH_HCP"
 workspace_name    = "ansible-hcp-demo-02"
 
-# Optional: OAuth token for VCS integration
-# oauth_token_id = "your-oauth-token-id"
+# VCS Integration Configuration (GitHub App)
+github_app_installation_id = "ghain-Ror8fM2oXMAMRJoc"
+github_repository = "KevinLapagna/ansible-hcp-demo-infra"
+vcs_branch        = "main"
+working_directory = "vms"
