@@ -12,3 +12,7 @@ github_app_installation_id = "ghain-Ror8fM2oXMAMRJoc"
 github_repository = "KevinLapagna/ansible-hcp-demo-infra"
 vcs_branch        = "main"
 working_directory = "vms"
+
+# AWS credentials (set via environment variables for security)
+aws_access_key = "your_aws_access_key_here"  # Set via environment variable TF_VAR_aws_access_key
+aws_secret_key =  "your_aws_secret_key_here"  # Set via environment variable TF_VAR_aws_secret_key

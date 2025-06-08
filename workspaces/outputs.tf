@@ -37,3 +37,13 @@ output "working_directory" {
   description = "The working directory for Terraform runs"
   value       = var.working_directory
 }
+
+output "variable_set_id" {
+  description = "The ID of the AWS credentials variable set"
+  value       = tfe_variable_set.aws_credentials.id
+}
+
+output "variable_set_name" {
+  description = "The name of the AWS credentials variable set"
+  value       = tfe_variable_set.aws_credentials.name
+}
