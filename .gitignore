@@ -3,4 +3,4 @@ terraform.tfstate.backup
 .terraform.d/
 .terraform/
 .terraform.lock.hcl
-secrets/terraform.tfvars
+bootstrap/secrets.auto.tfvars
