@@ -1,6 +1,3 @@
-# Terraform Cloud/Enterprise Configuration
-tfe_hostname = "app.terraform.io"
-
 # Organization and Project Configuration
 organization_name = "lennart-org"
 project_name      = "RH_HCP"

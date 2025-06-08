@@ -7,17 +7,6 @@ terraform {
   }
 }
 
-terraform { 
-  cloud { 
-    
-    organization = "lennart-org" 
-
-    workspaces { 
-      name = "kev-workspace-01" 
-    } 
-  } 
-}
-
 provider "aws" {
   region     = var.aws_region
   access_key = var.aws_access_key

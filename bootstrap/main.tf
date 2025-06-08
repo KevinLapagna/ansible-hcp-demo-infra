@@ -26,7 +26,7 @@ data "tfe_project" "project" {
 
 # Create the workspace-management workspace for managing workspaces
 resource "tfe_workspace" "workspace_management" {
-  name                          = "workspace-management"
+  name                          = var.workspace_name
   organization                  = data.tfe_organization.org.name
   project_id                    = data.tfe_project.project.id
   description                   = "Workspace for managing other HCP workspaces"
@@ -45,7 +45,7 @@ resource "tfe_workspace" "workspace_management" {
   }
   
   # Set working directory for workspace management
-  working_directory = "workspaces"
+  working_directory = var.working_directory
 }
 
 # Create a variable set for TFE credentials
