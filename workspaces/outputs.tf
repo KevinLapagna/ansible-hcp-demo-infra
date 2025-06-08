@@ -38,12 +38,18 @@ output "working_directory" {
   value       = var.working_directory
 }
 
-output "variable_set_id" {
-  description = "The ID of the AWS credentials variable set"
-  value       = tfe_variable_set.aws_credentials.id
+# Workspace Management outputs
+output "workspace_management_id" {
+  description = "The ID of the workspace-management workspace"
+  value       = tfe_workspace.workspace_management.id
 }
 
-output "variable_set_name" {
-  description = "The name of the AWS credentials variable set"
-  value       = tfe_variable_set.aws_credentials.name
+output "workspace_management_name" {
+  description = "The name of the workspace-management workspace"
+  value       = tfe_workspace.workspace_management.name
+}
+
+output "workspace_management_url" {
+  description = "The URL of the workspace-management workspace"
+  value       = "https://${var.tfe_hostname}/app/${var.organization_name}/workspaces/${tfe_workspace.workspace_management.name}"
 }

@@ -15,34 +15,20 @@ variable "organization_name" {
   type        = string
 }
 
-variable "project_name" {
-  description = "The name of the HCP project"
-  type        = string
-}
-
 variable "workspace_name" {
   description = "The name of the HCP workspace to create"
   type        = string
 }
 
-variable "github_app_installation_id" {
-  description = "The GitHub App installation ID for VCS integration"
+# AWS credentials variables
+variable "aws_access_key" {
+  description = "AWS Access Key ID"
   type        = string
+  sensitive   = true
 }
 
-variable "github_repository" {
-  description = "The GitHub repository identifier (owner/repo)"
+variable "aws_secret_key" {
+  description = "AWS Secret Access Key"
   type        = string
-}
-
-variable "vcs_branch" {
-  description = "The VCS branch to use for the workspace"
-  type        = string
-  default     = "main"
-}
-
-variable "working_directory" {
-  description = "The working directory for Terraform runs"
-  type        = string
-  default     = ""
+  sensitive   = true
 }

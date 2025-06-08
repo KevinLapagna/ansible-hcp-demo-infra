@@ -1,5 +1,6 @@
-workspaces/terraform.tfstate
-workspaces/terraform.tfstate.backup
-workspaces/.terraform.d/
-workspaces/.terraform/
-workspaces/.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.d/
+.terraform/
+.terraform.lock.hcl
+secrets/terraform.tfvars

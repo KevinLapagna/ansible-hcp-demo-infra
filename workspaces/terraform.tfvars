@@ -1,18 +1,17 @@
 # Terraform Cloud/Enterprise Configuration
 tfe_hostname = "app.terraform.io"
-# tfe_token = "your-terraform-cloud-api-token"  # Set via environment variable TF_VAR_tfe_token
 
 # Organization and Project Configuration
 organization_name = "lennart-org"
 project_name      = "RH_HCP"
-workspace_name    = "ansible-hcp-demo-02"
+workspace_name    = "ansible-hcp-demo-02"  # For VMs workspace
+
+# Note: This configuration creates TWO workspaces:
+# 1. ansible-hcp-demo-02 (for managing VMs in /vms directory)
+# 2. workspace-management (for managing workspaces in /workspaces directory)
 
 # VCS Integration Configuration (GitHub App)
 github_app_installation_id = "ghain-Ror8fM2oXMAMRJoc"
 github_repository = "KevinLapagna/ansible-hcp-demo-infra"
 vcs_branch        = "main"
 working_directory = "vms"
-
-# AWS credentials (set via environment variables for security)
-aws_access_key = "your_aws_access_key_here"  # Set via environment variable TF_VAR_aws_access_key
-aws_secret_key =  "your_aws_secret_key_here"  # Set via environment variable TF_VAR_aws_secret_key
