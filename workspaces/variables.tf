@@ -20,29 +20,7 @@ variable "project_name" {
   type        = string
 }
 
-variable "workspace_name" {
-  description = "The name of the HCP workspace to create"
-  type        = string
-}
-
 variable "github_app_installation_id" {
   description = "The GitHub App installation ID for VCS integration"
   type        = string
-}
-
-variable "github_repository" {
-  description = "The GitHub repository identifier (owner/repo)"
-  type        = string
-}
-
-variable "vcs_branch" {
-  description = "The VCS branch to use for the workspace"
-  type        = string
-  default     = "main"
-}
-
-variable "working_directory" {
-  description = "The working directory for Terraform runs"
-  type        = string
-  default     = ""
 }

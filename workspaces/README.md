@@ -4,7 +4,7 @@ Terraform configuration for managing HCP workspaces. This configuration creates 
 
 ## Workspaces Created
 
-- **`ansible-hcp-demo-02`** - Manages AWS VMs (working directory: `vms/`)
+- **`ansible-hcp-demo-ec2-vms`** - Manages AWS VMs (working directory: `vms/`)
 
 ## Management
 

@@ -37,7 +37,7 @@ resource "tfe_project_variable_set" "aws_credentials_assignment" {
 
 # Create the HCP workspace
 resource "tfe_workspace" "ansible_hcp_demo" {
-  name                          = var.workspace_name
+  name                          = "ansible-hcp-demo-ec2-vms"
   organization                  = data.tfe_organization.org.name
   project_id                    = data.tfe_project.project.id
   description                   = "Ansible HCP demonstration workspace"
@@ -50,11 +50,11 @@ resource "tfe_workspace" "ansible_hcp_demo" {
   
   # VCS configuration for GitHub App integration
   vcs_repo {
-    identifier                 = var.github_repository
-    branch                     = var.vcs_branch
+    identifier                 = "KevinLapagna/ansible-hcp-demo-infra"
+    branch                     = "main"
     github_app_installation_id = var.github_app_installation_id
   }
   
   # Set working directory for Terraform runs
-  working_directory = var.working_directory
+  working_directory = "vms"
 }

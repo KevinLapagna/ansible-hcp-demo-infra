@@ -25,10 +25,10 @@ Creates organization-level variable sets containing:
 ## Variable Sets Created
 
 - **`tfe-credentials`** - Applied to workspace-management workspace
-- **`aws-credentials`** - Applied to ansible-hcp-demo-02 workspace
+- **`aws-credentials`** - Applied to ansible-hcp-demo-ec2-vms workspace
 
 ## Security
 
-- Use `secrets.auto.tfvars.template` as template
+- Use template file for credential setup
 - Never commit actual `secrets.auto.tfvars` to version control
 - All credentials marked as sensitive in Terraform Cloud
