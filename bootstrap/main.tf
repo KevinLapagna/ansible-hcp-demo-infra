@@ -32,7 +32,9 @@ resource "tfe_workspace" "workspace_management" {
   description                   = "Workspace for managing other HCP workspaces"
   tag_names                     = ["workspace-management", "infrastructure", "terraform"]
   auto_apply                    = true
-  file_triggers_enabled         = false
+  file_triggers_enabled         = true
+  working_directory             = var.working_directory
+  trigger_patterns              = ["${var.working_directory}/**/*"]
   queue_all_runs                = true
   speculative_enabled           = true
   structured_run_output_enabled = true
@@ -45,7 +47,7 @@ resource "tfe_workspace" "workspace_management" {
   }
   
   # Set working directory for workspace management
-  working_directory = var.working_directory
+  working_directory = 
 }
 
 # Create a variable set for TFE credentials
