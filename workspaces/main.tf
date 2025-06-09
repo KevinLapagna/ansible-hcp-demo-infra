@@ -43,7 +43,9 @@ resource "tfe_workspace" "ansible_hcp_demo" {
   description                   = "Ansible HCP demonstration workspace"
   tag_names                     = ["ansible", "hcp", "demo"]
   auto_apply                    = true
-  file_triggers_enabled         = false
+  file_triggers_enabled         = true
+  working_directory             = "vms"
+  trigger_patterns              = ["vms/**/*"]
   queue_all_runs                = true
   speculative_enabled           = true
   structured_run_output_enabled = true
@@ -54,7 +56,4 @@ resource "tfe_workspace" "ansible_hcp_demo" {
     branch                     = "main"
     github_app_installation_id = var.github_app_installation_id
   }
-  
-  # Set working directory for Terraform runs
-  working_directory = "vms"
 }
