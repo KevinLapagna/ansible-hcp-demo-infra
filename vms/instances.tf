@@ -186,3 +186,24 @@ module "social_elf_vm" {
   }
 }
 # END ANSIBLE MANAGED BLOCK - social_elf
+# BEGIN ANSIBLE MANAGED BLOCK - kind_magpie
+
+# kind magpie VM Instance - Added by Ansible
+module "kind_magpie_vm" {
+  source = "./modules/ec2-instance"
+
+  # Required parameters
+  instance_name = "kind-magpie-VM"
+  instance_type = var.instance_type
+
+  # Default parameters (can be overridden as needed)
+  ami_id             = var.ami_id
+  key_name           = aws_key_pair.vm_auth.key_name
+  subnet_id          = aws_subnet.public.id
+  security_group_ids = [aws_security_group.allow_ssh.id]
+  tags = {
+    Environment = "Development"
+    CreatedBy   = "Ansible"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - kind_magpie
