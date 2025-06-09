@@ -270,3 +270,24 @@ module "super_kitten_vm" {
   }
 }
 # END ANSIBLE MANAGED BLOCK - super_kitten
+# BEGIN ANSIBLE MANAGED BLOCK - subtle_dog
+
+# subtle dog VM Instance - Added by Ansible
+module "subtle_dog_vm" {
+  source = "./modules/ec2-instance"
+
+  # Required parameters
+  instance_name = "subtle-dog-VM"
+  instance_type = var.instance_type
+
+  # Default parameters (can be overridden as needed)
+  ami_id             = var.ami_id
+  key_name           = aws_key_pair.vm_auth.key_name
+  subnet_id          = aws_subnet.public.id
+  security_group_ids = [aws_security_group.allow_ssh.id]
+  tags = {
+    Environment = "Development"
+    CreatedBy   = "Ansible"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - subtle_dog
