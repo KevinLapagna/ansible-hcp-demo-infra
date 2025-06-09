@@ -102,3 +102,24 @@ module "main_husky_vm" {
   }
 }
 # END ANSIBLE MANAGED BLOCK - main_husky
+# BEGIN ANSIBLE MANAGED BLOCK - cuddly_worm
+
+# cuddly worm VM Instance - Added by Ansible
+module "cuddly_worm_vm" {
+  source = "./modules/ec2-instance"
+
+  # Required parameters
+  instance_name = "cuddly-worm-VM"
+  instance_type = var.instance_type
+
+  # Default parameters (can be overridden as needed)
+  ami_id             = var.ami_id
+  key_name           = aws_key_pair.vm_auth.key_name
+  subnet_id          = aws_subnet.public.id
+  security_group_ids = [aws_security_group.allow_ssh.id]
+  tags = {
+    Environment = "Development"
+    CreatedBy   = "Ansible"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - cuddly_worm
