@@ -39,3 +39,24 @@ module "united_doe_vm" {
   }
 }
 # END ANSIBLE MANAGED BLOCK - united_doe
+# BEGIN ANSIBLE MANAGED BLOCK - proud_llama
+
+# proud llama VM Instance - Added by Ansible
+module "proud_llama_vm" {
+  source = "./modules/ec2-instance"
+
+  # Required parameters
+  instance_name = "proud-llama-VM"
+  instance_type = var.instance_type
+
+  # Default parameters (can be overridden as needed)
+  ami_id             = var.ami_id
+  key_name           = aws_key_pair.vm_auth.key_name
+  subnet_id          = aws_subnet.public.id
+  security_group_ids = [aws_security_group.allow_ssh.id]
+  tags = {
+    Environment = "Development"
+    CreatedBy   = "Ansible"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - proud_llama
