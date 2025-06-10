@@ -16,3 +16,19 @@
 #     Role        = "WebServer"
 #   }
 # }
+# BEGIN ANSIBLE MANAGED BLOCK - native_lion
+# native lion VM Instance - Added by Ansible
+resource "aws_instance" "native_lion_vm" {
+  ami           = "ami-06dd92742425a21ec"
+  instance_type = "t2.small"
+  key_name      = aws_key_pair.vm_auth.key_name
+  subnet_id     = aws_subnet.public.id
+  vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+
+  tags = {
+    Name        = "native-lion-VM"
+    Environment = "Development"
+    CreatedBy   = "Ansible"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - native_lion
