@@ -70,3 +70,19 @@ resource "aws_instance" "tender_filly_vm" {
   }
 }
 # END ANSIBLE MANAGED BLOCK - tender_filly
+# BEGIN ANSIBLE MANAGED BLOCK - boss_tiger
+# boss tiger VM Instance - Added by Ansible
+resource "aws_instance" "boss_tiger_vm" {
+  ami           = "ami-0fe630eb857a6ec83"
+  instance_type = var.instance_type
+  key_name      = aws_key_pair.vm_auth.key_name
+  subnet_id     = aws_subnet.public.id
+  vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+
+  tags = {
+    Name        = "boss-tiger-VM"
+    Environment = "Development"
+    CreatedBy   = "Ansible"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - boss_tiger
