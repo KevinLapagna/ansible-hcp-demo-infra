@@ -102,3 +102,19 @@ resource "aws_instance" "_vm" {
   }
 }
 # END ANSIBLE MANAGED BLOCK - 
+# BEGIN ANSIBLE MANAGED BLOCK - simple_orca
+# simple orca VM Instance - Added by Ansible
+resource "aws_instance" "simple_orca_vm" {
+  ami           = "ami-02d7e5b6f3a6a1a14"
+  instance_type = "t2.micro"
+  key_name      = aws_key_pair.vm_auth.key_name
+  subnet_id     = aws_subnet.public.id
+  vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+
+  tags = {
+    Name        = "simple-orca-VM"
+    Environment = "Development"
+    CreatedBy   = "Ansible"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - simple_orca
