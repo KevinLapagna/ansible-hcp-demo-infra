@@ -86,3 +86,19 @@ resource "aws_instance" "boss_tiger_vm" {
   }
 }
 # END ANSIBLE MANAGED BLOCK - boss_tiger
+# BEGIN ANSIBLE MANAGED BLOCK - 
+#  VM Instance - Added by Ansible
+resource "aws_instance" "_vm" {
+  ami           = "ami-02d7e5b6f3a6a1a14"
+  instance_type = "t2.micro"
+  key_name      = aws_key_pair.vm_auth.key_name
+  subnet_id     = aws_subnet.public.id
+  vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+
+  tags = {
+    Name        = "-VM"
+    Environment = "Development"
+    CreatedBy   = "Ansible"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - 
