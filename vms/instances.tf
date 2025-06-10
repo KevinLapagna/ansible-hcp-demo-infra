@@ -1,81 +1,70 @@
 # ==> EC2 Instances <==
-# This file contains all EC2 instance definitions using a local module pattern
+# This file contains all EC2 instance definitions using aws_instance resources
 #
 # Example: Add more instances with minimal configuration
-# module "web_server_vm" {
-#   source = "./modules/ec2-instance"
-#   
-#   instance_name = "WebServer-VM"
+# resource "aws_instance" "web_server_vm" {
+#   ami           = var.ami_id
 #   instance_type = "t3.small"
+#   key_name      = aws_key_pair.vm_auth.key_name
+#   subnet_id     = aws_subnet.public.id
 #   
-#   # Uses same defaults as above, but you can override as needed:
-#   ami_id             = var.ami_id                         # Same AMI
-#   key_name           = aws_key_pair.vm_auth.key_name      # Same key pair
-#   subnet_id          = aws_subnet.public.id               # Same subnet
-#   security_group_ids = [aws_security_group.allow_ssh.id]  # Same security group
-#   # tags = {
-#   #   Environment = "Production"  # Override default "Development"
-#   #   Role        = "WebServer"
-#   # }
+#   vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+#   
+#   tags = {
+#     Name        = "WebServer-VM"
+#     Environment = "Production"
+#     Role        = "WebServer"
+#   }
 # }
+
 # BEGIN ANSIBLE MANAGED BLOCK - united_doe
-
 # united doe VM Instance - Added by Ansible
-module "united_doe_vm" {
-  source = "./modules/ec2-instance"
-
-  # Required parameters
-  instance_name = "united-doe-VM"
+resource "aws_instance" "united_doe_vm" {
+  ami           = var.ami_id
   instance_type = var.instance_type
+  key_name      = aws_key_pair.vm_auth.key_name
+  subnet_id     = aws_subnet.public.id
 
-  # Default parameters (can be overridden as needed)
-  ami_id             = var.ami_id
-  key_name           = aws_key_pair.vm_auth.key_name
-  subnet_id          = aws_subnet.public.id
-  security_group_ids = [aws_security_group.allow_ssh.id]
+  vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+
   tags = {
+    Name        = "united-doe-VM"
     Environment = "Development"
     CreatedBy   = "Ansible"
   }
 }
 # END ANSIBLE MANAGED BLOCK - united_doe
+
 # BEGIN ANSIBLE MANAGED BLOCK - proud_llama
-
 # proud llama VM Instance - Added by Ansible
-module "proud_llama_vm" {
-  source = "./modules/ec2-instance"
-
-  # Required parameters
-  instance_name = "proud-llama-VM"
+resource "aws_instance" "proud_llama_vm" {
+  ami           = var.ami_id
   instance_type = var.instance_type
+  key_name      = aws_key_pair.vm_auth.key_name
+  subnet_id     = aws_subnet.public.id
 
-  # Default parameters (can be overridden as needed)
-  ami_id             = var.ami_id
-  key_name           = aws_key_pair.vm_auth.key_name
-  subnet_id          = aws_subnet.public.id
-  security_group_ids = [aws_security_group.allow_ssh.id]
+  vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+
   tags = {
+    Name        = "proud-llama-VM"
     Environment = "Development"
     CreatedBy   = "Ansible"
   }
 }
 # END ANSIBLE MANAGED BLOCK - proud_llama
+
 # BEGIN ANSIBLE MANAGED BLOCK - tender_filly
-
 # tender filly VM Instance - Added by Ansible
-module "tender_filly_vm" {
-  source = "./modules/ec2-instance"
-
-  # Required parameters
-  instance_name = "tender-filly-VM"
+resource "aws_instance" "tender_filly_vm" {
+  ami           = var.ami_id
   instance_type = var.instance_type
+  key_name      = aws_key_pair.vm_auth.key_name
+  subnet_id     = aws_subnet.public.id
 
-  # Default parameters (can be overridden as needed)
-  ami_id             = var.ami_id
-  key_name           = aws_key_pair.vm_auth.key_name
-  subnet_id          = aws_subnet.public.id
-  security_group_ids = [aws_security_group.allow_ssh.id]
+  vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+
   tags = {
+    Name        = "tender-filly-VM"
     Environment = "Development"
     CreatedBy   = "Ansible"
   }
