@@ -1,7 +1,7 @@
-variable "aws_region" {
-  description = "The AWS region to create resources in."
-  type        = string
-  default     = "us-east-1" # Change this to your preferred region
+variable "aws_regions" {
+  description = "List of AWS regions to create resources in."
+  type        = list(string)
+  default     = ["us-east-1", "eu-central-1", "eu-west-1"]
 }
 
 variable "instance_type" {
@@ -10,9 +10,14 @@ variable "instance_type" {
   default     = "t2.micro" # Or t3.micro, t4g.micro (ARM) depending on availability and cost
 }
 
-variable "ami_id" {
-  description = "The AMI ID for Fedora 42. Update this when available."
-  type        = string
+variable "ami_ids" {
+  description = "AMI IDs for Fedora in each region."
+  type        = map(string)
+  default = {
+    "us-east-1"    = "ami-06dd92742425a21ec"  # Update with actual Fedora AMI for us-east-1
+    "eu-central-1" = "ami-0abcdef1234567890"  # Update with actual Fedora AMI for eu-central-1
+    "eu-west-1"    = "ami-0fedcba0987654321"  # Update with actual Fedora AMI for eu-west-1
+  }
 }
 
 variable "user_public_key" {
@@ -38,21 +43,22 @@ variable "aws_secret_key" {
   sensitive   = true # Marks the variable as sensitive in Terraform output
 }
 
-variable "vpc_cidr_block" {
-  description = "CIDR block for the VPC."
-  type        = string
-  default     = "10.0.0.0/16"
+variable "vpc_cidr_blocks" {
+  description = "CIDR blocks for VPCs in each region."
+  type        = map(string)
+  default = {
+    "us-east-1"    = "10.0.0.0/16"
+    "eu-central-1" = "10.1.0.0/16"
+    "eu-west-1"    = "10.2.0.0/16"
+  }
 }
 
-variable "subnet_cidr_block" {
-  description = "CIDR block for the subnet."
-  type        = string
-  default     = "10.0.1.0/24"
-}
-
-variable "availability_zone" {
-  description = "Availability Zone for the subnet (e.g., us-east-1a). Leave empty to let AWS choose."
-  type        = string
-  default     = "" # e.g., "us-east-1a". If empty, AWS picks one in the region.
-                   # It's better to specify one if you know it, or use data source to pick one.
+variable "subnet_cidr_blocks" {
+  description = "CIDR blocks for subnets in each region."
+  type        = map(string)
+  default = {
+    "us-east-1"    = "10.0.1.0/24"
+    "eu-central-1" = "10.1.1.0/24"
+    "eu-west-1"    = "10.2.1.0/24"
+  }
 }
