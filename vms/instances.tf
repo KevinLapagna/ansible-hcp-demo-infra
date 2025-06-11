@@ -35,3 +35,22 @@ resource "aws_instance" "holy_bison_vm" {
   }
 }
 # END ANSIBLE MANAGED BLOCK - holy_bison
+# BEGIN ANSIBLE MANAGED BLOCK - eager_coyote
+resource "aws_instance" "eager_coyote_vm" {
+  provider = aws.eu_central_1
+
+  ami           = "ami-0a98b5f222a0d2396"
+  instance_type = var.instance_type
+  key_name      = module.eu_central_1[0].key_pair_name
+  subnet_id     = module.eu_central_1[0].subnet_id
+
+  vpc_security_group_ids = [module.eu_central_1[0].security_group_id]
+
+  tags = {
+    Name        = "eager-coyote-VM-eu-central-1"
+    Environment = "Development"
+    CreatedBy   = "AAP"
+    Region      = "eu-central-1"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - eager_coyote
