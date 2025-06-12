@@ -73,3 +73,22 @@ resource "aws_instance" "clean_weasel_vm" {
   }
 }
 # END ANSIBLE MANAGED BLOCK - clean_weasel
+# BEGIN ANSIBLE MANAGED BLOCK - rapid_hippo
+resource "aws_instance" "rapid_hippo_vm" {
+  provider = aws.us_east_1
+
+  ami           = "ami-09614d9d7c2f96d00"
+  instance_type = var.instance_type
+  key_name      = module.us_east_1[0].key_pair_name
+  subnet_id     = module.us_east_1[0].subnet_id
+
+  vpc_security_group_ids = [module.us_east_1[0].security_group_id]
+
+  tags = {
+    Name        = "rapid-hippo-VM-us-east-1"
+    Environment = "Development"
+    CreatedBy   = "AAP"
+    Region      = "us-east-1"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - rapid_hippo
