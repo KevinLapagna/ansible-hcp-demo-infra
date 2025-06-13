@@ -18,11 +18,6 @@ variable "instance_type" {
   type        = string
 }
 
-variable "ami_id" {
-  description = "AMI ID for the region"
-  type        = string
-}
-
 variable "user_public_key" {
   description = "SSH public key string"
   type        = string

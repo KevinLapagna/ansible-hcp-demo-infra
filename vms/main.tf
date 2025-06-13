@@ -42,7 +42,6 @@ module "us_east_1" {
   vpc_cidr_block     = var.vpc_cidr_blocks["us-east-1"]
   subnet_cidr_block  = var.subnet_cidr_blocks["us-east-1"]
   instance_type      = var.instance_type
-  ami_id             = var.ami_ids["us-east-1"]
   user_public_key    = var.user_public_key
   key_pair_name      = var.key_pair_name
 }
@@ -59,7 +58,6 @@ module "eu_central_1" {
   vpc_cidr_block     = var.vpc_cidr_blocks["eu-central-1"]
   subnet_cidr_block  = var.subnet_cidr_blocks["eu-central-1"]
   instance_type      = var.instance_type
-  ami_id             = var.ami_ids["eu-central-1"]
   user_public_key    = var.user_public_key
   key_pair_name      = var.key_pair_name
 }
@@ -76,7 +74,6 @@ module "eu_west_1" {
   vpc_cidr_block     = var.vpc_cidr_blocks["eu-west-1"]
   subnet_cidr_block  = var.subnet_cidr_blocks["eu-west-1"]
   instance_type      = var.instance_type
-  ami_id             = var.ami_ids["eu-west-1"]
   user_public_key    = var.user_public_key
   key_pair_name      = var.key_pair_name
 }
