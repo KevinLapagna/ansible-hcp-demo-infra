@@ -2,7 +2,7 @@
 resource "aws_instance" "decent_locust_vm" {
   provider = aws.eu_central_1
 
-  ami           = "Fedora CoreOS 42"
+  ami           = "ami-0a98b5f222a0d2396"
   instance_type = var.instance_type
   key_name      = module.eu_central_1[0].key_pair_name
   subnet_id     = module.eu_central_1[0].subnet_id
