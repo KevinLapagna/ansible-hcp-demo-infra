@@ -7,8 +7,8 @@ aws_regions = ["us-east-1", "eu-central-1", "eu-west-1"]
 instance_type = "t2.micro"
 
 # SSH Configuration
-user_public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEd9LF2GQWbP6mrLlk8cDYio/NrHeSSp0+OH6rUWYhtJ kev@pyxis"
-key_pair_name   = "fedora-vm-tf-key"
+user_public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKjk0BAqV14r7Bb+GRF26yFVKOgeAIgXjkgflULIdiTQ ansible@aap"
+key_pair_name   = "aap-ssh-key"  # Name of the SSH key pair to be created
 
 # AMI IDs per region (Update these with actual Fedora AMI IDs for your regions)
 ami_ids = {
