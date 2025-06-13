@@ -74,3 +74,22 @@ resource "aws_instance" "true_cougar_vm" {
   }
 }
 # END ANSIBLE MANAGED BLOCK - true_cougar
+# BEGIN ANSIBLE MANAGED BLOCK - mighty_hornet
+resource "aws_instance" "mighty_hornet_vm" {
+  provider = aws.eu_central_1
+
+  ami           = "var.ami_id"
+  instance_type = var.instance_type
+  key_name      = module.eu_central_1[0].key_pair_name
+  subnet_id     = module.eu_central_1[0].subnet_id
+
+  vpc_security_group_ids = [module.eu_central_1[0].security_group_id]
+
+  tags = {
+    Name        = "mighty-hornet-VM-eu-central-1"
+    Environment = "Development"
+    CreatedBy   = "AAP"
+    Region      = "eu-central-1"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - mighty_hornet
