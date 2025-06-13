@@ -40,28 +40,6 @@ output "key_pair_names" {
   )
 }
 
-# ==> Instance Outputs - Only eu-central-1 <==
-output "instance_id" {
-  description = "ID of the EC2 instance in eu-central-1"
-  value       = aws_instance.native_lion_vm.id
-}
-
-output "instance_public_ip" {
-  description = "Public IP address of the EC2 instance in eu-central-1"
-  value       = aws_instance.native_lion_vm.public_ip
-}
-
-output "instance_public_dns" {
-  description = "Public DNS name of the EC2 instance in eu-central-1"
-  value       = aws_instance.native_lion_vm.public_dns
-}
-
-# ==> SSH Connection Information <==
-output "ssh_connection_command" {
-  description = "SSH command to connect to the instance in eu-central-1"
-  value       = "ssh -i ~/.ssh/${var.key_pair_name} fedora@${aws_instance.native_lion_vm.public_ip}"
-}
-
 # ==> Summary Output <==
 output "deployment_summary" {
   description = "Summary of the multi-region deployment"
