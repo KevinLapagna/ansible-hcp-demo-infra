@@ -13,6 +13,11 @@ output "security_group_id" {
   value       = aws_security_group.allow_ssh.id
 }
 
+output "windows_winrm_security_group_id" {
+  description = "ID of the Windows WinRM security group"
+  value       = aws_security_group.windows_winrm_sg.id
+}
+
 output "internet_gateway_id" {
   description = "ID of the internet gateway"
   value       = aws_internet_gateway.gw.id

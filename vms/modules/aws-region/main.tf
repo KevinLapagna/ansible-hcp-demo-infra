@@ -94,6 +94,36 @@ resource "aws_security_group" "allow_ssh" {
   }
 }
 
+# ==> Windows WinRM Security Group <==
+resource "aws_security_group" "windows_winrm_sg" {
+  name        = "windows-winrm-sg-${var.region}"
+  description = "Allow WinRM HTTPS (certificate authentication only)"
+  vpc_id      = aws_vpc.main.id
+
+  # WinRM HTTPS (5986) - Certificate authentication only
+  ingress {
+    from_port   = 5986
+    to_port     = 5986
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "WinRM HTTPS (Certificate authentication only)"
+  }
+
+  # Allow all outbound traffic
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name        = "windows-winrm-https-only-sg-${var.region}"
+    Environment = "Development"
+    Region      = var.region
+  }
+}
+
 # ==> EC2 Key Pair <==
 resource "aws_key_pair" "vm_auth" {
   key_name   = "${var.key_pair_name}-${var.region}"
