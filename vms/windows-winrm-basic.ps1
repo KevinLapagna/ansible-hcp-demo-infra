@@ -75,8 +75,8 @@ if (-not $existingListener) {
 }
 
 # Set Administrator password (required before certificate mapping)
-Write-Host "Setting Administrator password..."
-net user Administrator "P@ssw0rd123!" /active:yes
+# Write-Host "Setting Administrator password..."
+# net user Administrator "P@ssw0rd123!" /active:yes
 
 # Create certificate mapping using PowerShell method (Ansible-compatible)
 Write-Host "Setting up certificate mapping for Ansible compatibility..."
@@ -101,11 +101,11 @@ $existingMappings = Get-ChildItem -Path WSMan:\localhost\ClientCertificate -Erro
 if ($existingMappings) {
     Write-Host "Certificate mapping already exists for $userPrincipalName"
 } else {
-    # Create the certificate mapping using the PowerShell method
+    # Create the certificate mapping using a placeholder password
     Write-Host "Creating certificate mapping for $userPrincipalName..."
     
-    # Create credential object for the Administrator user
-    $securePassword = ConvertTo-SecureString "P@ssw0rd123!" -AsPlainText -Force
+    # Create credential object with placeholder password (not used for cert auth)
+    $securePassword = ConvertTo-SecureString "PlaceholderPassword" -AsPlainText -Force
     $credential = New-Object System.Management.Automation.PSCredential("Administrator", $securePassword)
     
     # Create the certificate mapping
