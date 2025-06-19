@@ -101,6 +101,7 @@ resource "aws_instance" "windows_template_vm" {
   # Windows Server 2022 Base AMI for eu-central-1
   ami           = "ami-09f31a65dd0bdca78"  # Microsoft Windows Server 2022 Base
   instance_type = "t3.medium"  # Windows requires more resources than t2.micro
+  key_name      = "windows-debugging"
   subnet_id     = module.eu_central_1[0].subnet_id
 
   vpc_security_group_ids = [module.eu_central_1[0].windows_winrm_security_group_id]
@@ -108,10 +109,10 @@ resource "aws_instance" "windows_template_vm" {
   # Enable detailed monitoring for Windows instances
   monitoring = true
 
-  # Configure WinRM and certificate authentication
-  user_data = base64encode(templatefile("${path.module}/windows-userdata.ps1", {
-    client_certificate = filebase64("${path.module}/aap-client-certificate.crt")
-  }))
+  # # Configure WinRM and certificate authentication
+  # user_data = base64encode(templatefile("${path.module}/windows-userdata.ps1", {
+  #   client_certificate = filebase64("${path.module}/aap-client-certificate.crt")
+  # }))
 
   tags = {
     Name        = "windows-template-VM-eu-central-1"
