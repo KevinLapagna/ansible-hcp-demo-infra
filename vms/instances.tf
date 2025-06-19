@@ -95,7 +95,7 @@ resource "aws_instance" "ruling_racer_vm" {
 # END ANSIBLE MANAGED BLOCK - ruling_racer
 
 # BEGIN ANSIBLE MANAGED BLOCK - windows_template
-resource "aws_instance" "windows_template_vm" {
+resource "aws_instance" "windows_template_vm_01" {
   provider = aws.eu_central_1
 
   # Windows Server 2022 Base AMI for eu-central-1
@@ -109,10 +109,10 @@ resource "aws_instance" "windows_template_vm" {
   # Enable detailed monitoring for Windows instances
   monitoring = true
 
-  # # Configure WinRM and certificate authentication
-  # user_data = base64encode(templatefile("${path.module}/windows-userdata.ps1", {
-  #   client_certificate = filebase64("${path.module}/aap-client-certificate.crt")
-  # }))
+  # User data script to configure WinRM with certificate authentication
+  user_data = base64encode(templatefile("${path.module}/windows-winrm-setup.ps1", {
+    certificate_content = file("${path.module}/aap-client-certificate.crt")
+  }))
 
   tags = {
     Name        = "windows-template-VM-eu-central-1"
@@ -127,14 +127,16 @@ resource "aws_instance" "windows_template_vm" {
 output "windows_template_vm" {
   description = "Windows template VM details"
   value = {
-    id         = aws_instance.windows_template_vm.id
-    public_ip  = aws_instance.windows_template_vm.public_ip
-    public_dns = aws_instance.windows_template_vm.public_dns
-    winrm_https = "https://${aws_instance.windows_template_vm.public_ip}:5986/wsman"
-    winrm_http = "http://${aws_instance.windows_template_vm.public_ip}:5985/wsman"
-    rdp_connection = "${aws_instance.windows_template_vm.public_ip}:3389"
-    administrator_password = "P@ssw0rd123!"
-    instance_type = aws_instance.windows_template_vm.instance_type
+    id         = aws_instance.windows_template_vm_01.id
+    public_ip  = aws_instance.windows_template_vm_01.public_ip
+    public_dns = aws_instance.windows_template_vm_01.public_dns
+    winrm_https = "https://${aws_instance.windows_template_vm_01.public_ip}:5986/wsman"
+    winrm_http = "http://${aws_instance.windows_template_vm_01.public_ip}:5985/wsman"
+    rdp_connection = "${aws_instance.windows_template_vm_01.public_ip}:3389"
+    administrator_password = "P@ssw0rd123!"  # Fallback authentication
+    instance_type = aws_instance.windows_template_vm_01.instance_type
+    certificate_authentication = "Configured for AAP client certificate"
+    connection_info = "Use certificate authentication with Administrator user"
   }
   sensitive = true
 }
