@@ -74,19 +74,55 @@ if (-not $existingListener) {
     Write-Host "HTTPS listener already exists"
 }
 
-# Check if certificate mapping already exists
-Write-Host "Checking for existing certificate mapping..."
-$existingMapping = winrm enumerate winrm/config/service/certmapping 2>$null
-$thumbprint = $cert.Thumbprint
-$mappingExists = $existingMapping | Select-String $thumbprint
+# Set Administrator password (required before certificate mapping)
+Write-Host "Setting Administrator password..."
+net user Administrator "P@ssw0rd123!" /active:yes
 
-if (-not $mappingExists) {
-    # Create certificate mapping using the imported client certificate
-    Write-Host "Creating certificate mapping..."
-    $issuerThumbprint = $cert.Thumbprint  # Use the cert thumbprint as issuer
-    winrm create "winrm/config/service/certmapping?Issuer=$issuerThumbprint+Subject=$($cert.Subject)+URI=*" "@{UserName=`"Administrator`";Password=`"P@ssw0rd123!`"}"
+# Create certificate mapping using PowerShell method (Ansible-compatible)
+Write-Host "Setting up certificate mapping for Ansible compatibility..."
+
+# Get the userPrincipalName from the certificate SAN field
+$userPrincipalName = $cert.GetNameInfo('UpnName', $false)
+Write-Host "Certificate UPN: $userPrincipalName"
+
+# Build certificate chain to get the CA thumbprint
+$certChain = [System.Security.Cryptography.X509Certificates.X509Chain]::new()
+[void]$certChain.Build($cert)
+$caThumbprint = $certChain.ChainElements.Certificate[-1].Thumbprint
+Write-Host "CA Thumbprint: $caThumbprint"
+
+# Check if certificate mapping already exists
+$existingMappings = Get-ChildItem -Path WSMan:\localhost\ClientCertificate -ErrorAction SilentlyContinue | 
+    Where-Object {
+        $mapping = $_ | Get-Item
+        "Subject=$userPrincipalName" -in $mapping.Keys
+    }
+
+if ($existingMappings) {
+    Write-Host "Certificate mapping already exists for $userPrincipalName"
 } else {
-    Write-Host "Certificate mapping already exists"
+    # Create the certificate mapping using the PowerShell method
+    Write-Host "Creating certificate mapping for $userPrincipalName..."
+    
+    # Create credential object for the Administrator user
+    $securePassword = ConvertTo-SecureString "P@ssw0rd123!" -AsPlainText -Force
+    $credential = New-Object System.Management.Automation.PSCredential("Administrator", $securePassword)
+    
+    # Create the certificate mapping
+    $certMapping = @{
+        Path       = 'WSMan:\localhost\ClientCertificate'
+        Subject    = $userPrincipalName
+        Issuer     = $caThumbprint
+        Credential = $credential
+        Force      = $true
+    }
+    
+    try {
+        New-Item @certMapping
+        Write-Host "Certificate mapping created successfully"
+    } catch {
+        Write-Host "Error creating certificate mapping: $($_.Exception.Message)"
+    }
 }
 
 # Configure firewall (these commands are idempotent)
@@ -94,10 +130,6 @@ Write-Host "Configuring firewall..."
 netsh advfirewall firewall set rule group="Windows Remote Management" new enable=yes 2>$null
 netsh advfirewall firewall add rule name="WinRM-HTTP" dir=in localport=5985 protocol=TCP action=allow 2>$null
 netsh advfirewall firewall add rule name="WinRM-HTTPS" dir=in localport=5986 protocol=TCP action=allow 2>$null
-
-# Set Administrator password
-Write-Host "Setting Administrator password..."
-net user Administrator "P@ssw0rd123!" /active:yes
 
 # Enable RDP
 Write-Host "Enabling RDP..."
@@ -116,6 +148,33 @@ winrm set winrm/config/client '@{AllowUnencrypted="true"}'
 winrm id -r:http://localhost:5985 -auth:basic -u:Administrator -p:"P@ssw0rd123!"
 
 Write-Host "WinRM setup completed successfully!"
+
+# Add comprehensive diagnostics
+Write-Host "`n=== WinRM Configuration Diagnostics ==="
+Write-Host "Available Listeners:"
+winrm enumerate winrm/config/listener
+
+Write-Host "`nCertificate Mappings:"
+Get-ChildItem -Path WSMan:\localhost\ClientCertificate -ErrorAction SilentlyContinue | ForEach-Object {
+    $mapping = $_ | Get-Item
+    Write-Host "Mapping: $($_.Name)"
+    $mapping.Keys | ForEach-Object { Write-Host "  $_" }
+}
+
+Write-Host "`nImported Client Certificate Details:"
+Write-Host "Subject: $($cert.Subject)"
+Write-Host "Issuer: $($cert.Issuer)" 
+Write-Host "Thumbprint: $($cert.Thumbprint)"
+Write-Host "UPN from SAN: $($cert.GetNameInfo('UpnName', $false))"
+
+Write-Host "`nCertificates in TrustedPeople store:"
+Get-ChildItem -Path Cert:\LocalMachine\TrustedPeople | Select-Object Subject, Thumbprint, Issuer | Format-Table
+
+Write-Host "`nNetwork Listeners:"
+netstat -an | findstr ":5985\|:5986"
+
+Write-Host "`nWinRM Service Auth Configuration:"
+winrm get winrm/config/service/auth
 
 # Cleanup
 Remove-Item $certFile -Force -ErrorAction SilentlyContinue
