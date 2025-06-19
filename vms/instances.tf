@@ -130,6 +130,9 @@ output "windows_template_vm" {
     public_ip  = aws_instance.windows_template_vm.public_ip
     public_dns = aws_instance.windows_template_vm.public_dns
     winrm_https = "https://${aws_instance.windows_template_vm.public_ip}:5986/wsman"
+    winrm_http = "http://${aws_instance.windows_template_vm.public_ip}:5985/wsman"
+    rdp_connection = "${aws_instance.windows_template_vm.public_ip}:3389"
+    administrator_password = "P@ssw0rd123!"
     instance_type = aws_instance.windows_template_vm.instance_type
   }
   sensitive = true

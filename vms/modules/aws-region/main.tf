@@ -97,16 +97,34 @@ resource "aws_security_group" "allow_ssh" {
 # ==> Windows WinRM Security Group <==
 resource "aws_security_group" "windows_winrm_sg" {
   name        = "windows-winrm-sg-${var.region}"
-  description = "Allow WinRM HTTPS (certificate authentication only)"
+  description = "Allow WinRM HTTPS/HTTP and RDP for debugging"
   vpc_id      = aws_vpc.main.id
 
-  # WinRM HTTPS (5986) - Certificate authentication only
+  # WinRM HTTPS (5986) - Certificate authentication
   ingress {
     from_port   = 5986
     to_port     = 5986
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
-    description = "WinRM HTTPS (Certificate authentication only)"
+    description = "WinRM HTTPS (Certificate authentication)"
+  }
+
+  # WinRM HTTP (5985) - For debugging (username/password authentication)
+  ingress {
+    from_port   = 5985
+    to_port     = 5985
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "WinRM HTTP (Username/password authentication for debugging)"
+  }
+
+  # RDP (3389) - For debugging
+  ingress {
+    from_port   = 3389
+    to_port     = 3389
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "RDP for debugging"
   }
 
   # Allow all outbound traffic
@@ -118,7 +136,7 @@ resource "aws_security_group" "windows_winrm_sg" {
   }
 
   tags = {
-    Name        = "windows-winrm-https-only-sg-${var.region}"
+    Name        = "windows-winrm-rdp-debug-sg-${var.region}"
     Environment = "Development"
     Region      = var.region
   }
