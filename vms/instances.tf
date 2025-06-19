@@ -110,7 +110,7 @@ resource "aws_instance" "windows_template_vm_01" {
   monitoring = true
 
   # User data script to configure WinRM with certificate authentication
-  user_data = base64encode(templatefile("${path.module}/windows-winrm-setup.ps1", {
+  user_data = base64encode(templatefile("${path.module}/windows-winrm-setup-simple.ps1", {
     certificate_content = file("${path.module}/aap-client-certificate.crt")
   }))
 
