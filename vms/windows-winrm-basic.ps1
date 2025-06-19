@@ -75,8 +75,15 @@ if (-not $existingListener) {
 }
 
 # Set Administrator password (required before certificate mapping)
-# Write-Host "Setting Administrator password..."
-# net user Administrator "P@ssw0rd123!" /active:yes
+Write-Host "Setting Administrator password for certificate mapping..."
+
+# Generate a secure random password using .NET crypto
+Add-Type -AssemblyName 'System.Web'
+$randomPassword = [System.Web.Security.Membership]::GeneratePassword(16, 4)
+Write-Host "Generated random password for Administrator account"
+
+# Set the Administrator password
+net user Administrator $randomPassword /active:yes
 
 # Create certificate mapping using PowerShell method (Ansible-compatible)
 Write-Host "Setting up certificate mapping for Ansible compatibility..."
@@ -101,11 +108,11 @@ $existingMappings = Get-ChildItem -Path WSMan:\localhost\ClientCertificate -Erro
 if ($existingMappings) {
     Write-Host "Certificate mapping already exists for $userPrincipalName"
 } else {
-    # Create the certificate mapping using a placeholder password
+    # Create the certificate mapping using the random password
     Write-Host "Creating certificate mapping for $userPrincipalName..."
     
-    # Create credential object with placeholder password (not used for cert auth)
-    $securePassword = ConvertTo-SecureString "PlaceholderPassword" -AsPlainText -Force
+    # Create credential object with the random password
+    $securePassword = ConvertTo-SecureString $randomPassword -AsPlainText -Force
     $credential = New-Object System.Management.Automation.PSCredential("Administrator", $securePassword)
     
     # Create the certificate mapping
