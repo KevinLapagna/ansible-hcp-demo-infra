@@ -164,7 +164,7 @@ resource "aws_instance" "ace_crab_vm" {
   provider = aws.eu_west_1
 
   ami           = "ami-0668123a3627b3b15"
-  instance_type = "t3.medium"
+  instance_type = "t2.micro"
   key_name      = module.eu_west_1[0].key_pair_name
   subnet_id     = module.eu_west_1[0].subnet_id
 
