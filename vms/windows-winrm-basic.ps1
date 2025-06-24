@@ -74,16 +74,31 @@ if (-not $existingListener) {
     Write-Host "HTTPS listener already exists"
 }
 
-# Set Administrator password (required before certificate mapping)
-Write-Host "Setting Administrator password for certificate mapping..."
+# Create dedicated AAP user (required before certificate mapping)
+Write-Host "Creating dedicated AAP user for Ansible automation..."
 
 # Generate a secure random password using .NET crypto
 Add-Type -AssemblyName 'System.Web'
-$randomPassword = [System.Web.Security.Membership]::GeneratePassword(16, 4)
-Write-Host "Generated random password for Administrator account"
+$aapUsername = "ansible-aap-user"
+$randomPassword = [System.Web.Security.Membership]::GeneratePassword(30, 4)
+Write-Host "Generated random password for AAP user account"
 
-# Set the Administrator password
-net user Administrator $randomPassword /active:yes
+# Check if AAP user already exists
+$existingUser = Get-LocalUser -Name $aapUsername -ErrorAction SilentlyContinue
+if ($existingUser) {
+    Write-Host "AAP user already exists, updating password..."
+    net user $aapUsername $randomPassword
+} else {
+    # Create the AAP user
+    Write-Host "Creating new AAP user: $aapUsername"
+    net user $aapUsername $randomPassword /add /passwordchg:no /passwordreq:yes /active:yes /expires:never
+    
+    # Add to necessary groups for WinRM access
+    net localgroup "Remote Management Users" $aapUsername /add
+    net localgroup "Administrators" $aapUsername /add
+    
+    Write-Host "AAP user created and added to required groups"
+}
 
 # Create certificate mapping using PowerShell method (Ansible-compatible)
 Write-Host "Setting up certificate mapping for Ansible compatibility..."
@@ -108,12 +123,12 @@ $existingMappings = Get-ChildItem -Path WSMan:\localhost\ClientCertificate -Erro
 if ($existingMappings) {
     Write-Host "Certificate mapping already exists for $userPrincipalName"
 } else {
-    # Create the certificate mapping using the random password
-    Write-Host "Creating certificate mapping for $userPrincipalName..."
+    # Create the certificate mapping using the AAP user and random password
+    Write-Host "Creating certificate mapping for $userPrincipalName with AAP user..."
     
-    # Create credential object with the random password
+    # Create credential object with the AAP user and random password
     $securePassword = ConvertTo-SecureString $randomPassword -AsPlainText -Force
-    $credential = New-Object System.Management.Automation.PSCredential("Administrator", $securePassword)
+    $credential = New-Object System.Management.Automation.PSCredential($aapUsername, $securePassword)
     
     # Create the certificate mapping
     $certMapping = @{
@@ -149,12 +164,17 @@ net stop winrm
 net start winrm
 
 # Test WinRM
-Write-Host "Testing WinRM..."
+Write-Host "Testing WinRM with AAP user..."
 # Enable unencrypted traffic for client to test
 winrm set winrm/config/client '@{AllowUnencrypted="true"}'
-winrm id -r:http://localhost:5985 -auth:basic -u:Administrator -p:"P@ssw0rd123!"
+winrm id -r:http://localhost:5985 -auth:basic -u:$aapUsername -p:$randomPassword
 
 Write-Host "WinRM setup completed successfully!"
+
+Write-Host "`n=== AAP User Credentials ==="
+Write-Host "Username: $aapUsername"
+Write-Host "Password: ************"
+Write-Host "Note: Store these credentials securely for Ansible AAP configuration"
 
 # Add comprehensive diagnostics
 Write-Host "`n=== WinRM Configuration Diagnostics ==="
@@ -176,6 +196,12 @@ Write-Host "UPN from SAN: $($cert.GetNameInfo('UpnName', $false))"
 
 Write-Host "`nCertificates in TrustedPeople store:"
 Get-ChildItem -Path Cert:\LocalMachine\TrustedPeople | Select-Object Subject, Thumbprint, Issuer | Format-Table
+
+Write-Host "`nAAP User Information:"
+Get-LocalUser -Name $aapUsername | Select-Object Name, Enabled, LastLogon, PasswordExpires | Format-Table
+Write-Host "AAP User Group Memberships:"
+Get-LocalGroupMember -Group "Administrators" | Where-Object { $_.Name -like "*$aapUsername*" } | Format-Table
+Get-LocalGroupMember -Group "Remote Management Users" | Where-Object { $_.Name -like "*$aapUsername*" } | Format-Table
 
 Write-Host "`nNetwork Listeners:"
 netstat -an | findstr ":5985\|:5986"
