@@ -159,3 +159,24 @@ resource "aws_instance" "bold_sheep_vm" {
   }
 }
 # END ANSIBLE MANAGED BLOCK - bold_sheep
+# BEGIN ANSIBLE MANAGED BLOCK - ace_crab
+resource "aws_instance" "ace_crab_vm" {
+  provider = aws.eu_west_1
+
+  ami           = "ami-0668123a3627b3b15"
+  instance_type = "t2.micro"
+  key_name      = module.eu_west_1[0].key_pair_name
+  subnet_id     = module.eu_west_1[0].subnet_id
+
+  vpc_security_group_ids = [module.eu_west_1[0].security_group_id]
+
+  tags = {
+    Name        = "ace-crab-VM-eu-west-1"
+    Environment = "Development"
+    CreatedBy   = "AAP"
+    Region      = "eu-west-1"
+    OsType      = "Linux"
+    RequestID   = "REQ870019160"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - ace_crab
