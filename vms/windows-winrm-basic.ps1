@@ -87,15 +87,18 @@ Write-Host "Generated random password for AAP user account"
 $existingUser = Get-LocalUser -Name $aapUsername -ErrorAction SilentlyContinue
 if ($existingUser) {
     Write-Host "AAP user already exists, updating password..."
-    net user $aapUsername $randomPassword
+    # Use PowerShell cmdlet to avoid prompts
+    $securePassword = ConvertTo-SecureString $randomPassword -AsPlainText -Force
+    Set-LocalUser -Name $aapUsername -Password $securePassword
 } else {
-    # Create the AAP user
+    # Create the AAP user using PowerShell cmdlets to avoid prompts
     Write-Host "Creating new AAP user: $aapUsername"
-    net user $aapUsername $randomPassword /add /passwordchg:no /passwordreq:yes /active:yes /expires:never
+    $securePassword = ConvertTo-SecureString $randomPassword -AsPlainText -Force
+    New-LocalUser -Name $aapUsername -Password $securePassword -PasswordNeverExpires -UserMayNotChangePassword -AccountNeverExpires
     
     # Add to necessary groups for WinRM access
-    net localgroup "Remote Management Users" $aapUsername /add
-    net localgroup "Administrators" $aapUsername /add
+    Add-LocalGroupMember -Group "Remote Management Users" -Member $aapUsername -ErrorAction SilentlyContinue
+    Add-LocalGroupMember -Group "Administrators" -Member $aapUsername -ErrorAction SilentlyContinue
     
     Write-Host "AAP user created and added to required groups"
 }
@@ -167,7 +170,7 @@ net start winrm
 Write-Host "Testing WinRM with AAP user..."
 # Enable unencrypted traffic for client to test
 winrm set winrm/config/client '@{AllowUnencrypted="true"}'
-winrm id -r:http://localhost:5985 -auth:basic -u:$aapUsername -p:$randomPassword
+winrm id -r:http://localhost:5985 -auth:basic -u:"$aapUsername" -p:"$randomPassword"
 
 Write-Host "WinRM setup completed successfully!"
 
