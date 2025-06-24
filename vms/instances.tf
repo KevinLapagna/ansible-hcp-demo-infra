@@ -159,3 +159,24 @@ resource "aws_instance" "worthy_tuna_vm" {
   }
 }
 # END ANSIBLE MANAGED BLOCK - worthy_tuna
+# BEGIN ANSIBLE MANAGED BLOCK - brief_akita
+resource "aws_instance" "brief_akita_vm" {
+  provider = aws.eu_central_1
+
+  ami           = "ami-0a8e2e55de614b2b1"
+  instance_type = "t3.medium"
+  key_name      = module.eu_central_1[0].key_pair_name
+  subnet_id     = module.eu_central_1[0].subnet_id
+
+  vpc_security_group_ids = [module.eu_central_1[0].security_group_id]
+
+  tags = {
+    Name        = "brief-akita-VM-eu-central-1"
+    Environment = "Development"
+    CreatedBy   = "AAP"
+    Region      = "eu-central-1"
+    OsType      = "Linux"
+    RequestID   = "REQ349383379"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - brief_akita
