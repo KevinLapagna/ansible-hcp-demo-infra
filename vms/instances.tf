@@ -58,3 +58,33 @@ resource "aws_instance" "honest_frog_vm" {
   }
 }
 # END ANSIBLE MANAGED BLOCK - honest_frog
+# BEGIN ANSIBLE MANAGED BLOCK - guided_hermit
+resource "aws_instance" "guided_hermit_vm" {
+  provider = aws.eu_central_1
+
+  ami           = "ami-09f31a65dd0bdca78"  # Microsoft Windows Server 2022 Base
+  # ami         = "ami-06dd92742425a21ec"
+  instance_type = "t3.medium"  # Windows requires more resources than t2.micro
+  key_name      = module.eu_central_1[0].key_pair_name
+  subnet_id     = module.eu_central_1[0].subnet_id
+
+  vpc_security_group_ids = [module.eu_central_1[0].windows_winrm_security_group_id]
+
+  # Enable detailed monitoring for Windows instances
+  monitoring = true
+
+  # User data script to configure WinRM with certificate authentication
+  user_data = base64encode(templatefile("${path.module}/windows-winrm-basic.ps1", {
+    certificate_content = file("${path.module}/aap-client-certificate.crt")
+  }))
+
+  tags = {
+    Name        = "guided-hermit-VM-eu-central-1"
+    Environment = "Development"
+    CreatedBy   = "AAP"
+    Region      = "eu-central-1"
+    OsType      = "Windows"
+    RequestID   = "REQ264532939"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - guided_hermit
