@@ -138,3 +138,24 @@ resource "aws_instance" "actual_thrush_vm" {
   }
 }
 # END ANSIBLE MANAGED BLOCK - actual_thrush
+# BEGIN ANSIBLE MANAGED BLOCK - worthy_tuna
+resource "aws_instance" "worthy_tuna_vm" {
+  provider = aws.eu_west_1
+
+  ami           = "ami-0ca386c4436deaf15"
+  instance_type = "t2.micro"
+  key_name      = module.eu_west_1[0].key_pair_name
+  subnet_id     = module.eu_west_1[0].subnet_id
+
+  vpc_security_group_ids = [module.eu_west_1[0].security_group_id]
+
+  tags = {
+    Name        = "worthy-tuna-VM-eu-west-1"
+    Environment = "Development"
+    CreatedBy   = "AAP"
+    Region      = "eu-west-1"
+    OsType      = "Linux"
+    RequestID   = "REQ658672766"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - worthy_tuna
