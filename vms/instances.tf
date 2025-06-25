@@ -230,3 +230,24 @@ resource "aws_instance" "proper_pig_vm" {
   }
 }
 # END ANSIBLE MANAGED BLOCK - proper_pig
+# BEGIN ANSIBLE MANAGED BLOCK - steady_mutt
+resource "aws_instance" "steady_mutt_vm" {
+  provider = aws.eu_central_1
+
+  ami           = "ami-0a8e2e55de614b2b1"
+  instance_type = "t3.medium"
+  key_name      = module.eu_central_1[0].key_pair_name
+  subnet_id     = module.eu_central_1[0].subnet_id
+
+  vpc_security_group_ids = [module.eu_central_1[0].security_group_id]
+
+  tags = {
+    Name        = "steady-mutt-VM-eu-central-1"
+    Environment = "Development"
+    CreatedBy   = "AAP"
+    Region      = "eu-central-1"
+    OsType      = "Linux"
+    RequestID   = "REQ453023910"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - steady_mutt
