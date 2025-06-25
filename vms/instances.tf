@@ -251,3 +251,24 @@ resource "aws_instance" "steady_mutt_vm" {
   }
 }
 # END ANSIBLE MANAGED BLOCK - steady_mutt
+# BEGIN ANSIBLE MANAGED BLOCK - giving_ibex
+resource "aws_instance" "giving_ibex_vm" {
+  provider = aws.eu_central_1
+
+  ami           = "ami-0a8e2e55de614b2b1"
+  instance_type = "t3.medium"
+  key_name      = module.eu_central_1[0].key_pair_name
+  subnet_id     = module.eu_central_1[0].subnet_id
+
+  vpc_security_group_ids = [module.eu_central_1[0].security_group_id]
+
+  tags = {
+    Name        = "giving-ibex-VM-eu-central-1"
+    Environment = "Development"
+    CreatedBy   = "AAP"
+    Region      = "eu-central-1"
+    OsType      = "Linux"
+    RequestID   = "REQ998144213"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - giving_ibex
