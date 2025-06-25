@@ -122,7 +122,7 @@ resource "aws_instance" "worthy_tuna_vm" {
   provider = aws.eu_west_1
 
   ami           = "ami-0ca386c4436deaf15"
-  instance_type = "t2.micro"
+  instance_type = "t3.medium"
   key_name      = module.eu_west_1[0].key_pair_name
   subnet_id     = module.eu_west_1[0].subnet_id
 
