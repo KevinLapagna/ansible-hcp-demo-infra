@@ -119,3 +119,32 @@ resource "aws_instance" "safe_bengal_vm" {
   }
 }
 # END ANSIBLE MANAGED BLOCK - safe_bengal
+# BEGIN ANSIBLE MANAGED BLOCK - wired_tarpon
+resource "aws_instance" "wired_tarpon_vm" {
+  provider = aws.eu_west_1
+
+  ami           = "ami-02560f59f725918ec"
+  instance_type = "t3.medium"
+  key_name      = module.eu_west_1[0].key_pair_name
+  subnet_id     = module.eu_west_1[0].subnet_id
+
+  vpc_security_group_ids = [module.eu_west_1[0].windows_winrm_security_group_id]
+
+  # Enable detailed monitoring for Windows instances
+  monitoring = true
+
+  # User data script to configure WinRM with certificate authentication
+  user_data = base64encode(templatefile("${path.module}/windows-winrm-basic.ps1", {
+    certificate_content = file("${path.module}/aap-client-certificate.crt")
+  }))
+
+  tags = {
+    Name        = "wired-tarpon-VM-eu-west-1"
+    Environment = "Development"
+    CreatedBy   = "AAP"
+    Region      = "eu-west-1"
+    OsType      = "Windows"
+    RequestID   = "REQ21071394"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - wired_tarpon
