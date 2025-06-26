@@ -98,3 +98,24 @@ resource "aws_instance" "normal_ewe_vm" {
   }
 }
 # END ANSIBLE MANAGED BLOCK - normal_ewe
+# BEGIN ANSIBLE MANAGED BLOCK - safe_bengal
+resource "aws_instance" "safe_bengal_vm" {
+  provider = aws.eu_central_1
+
+  ami           = "ami-0a8e2e55de614b2b1"
+  instance_type = "t3.medium"
+  key_name      = module.eu_central_1[0].key_pair_name
+  subnet_id     = module.eu_central_1[0].subnet_id
+
+  vpc_security_group_ids = [module.eu_central_1[0].security_group_id]
+
+  tags = {
+    Name        = "safe-bengal-VM-eu-central-1"
+    Environment = "Development"
+    CreatedBy   = "AAP"
+    Region      = "eu-central-1"
+    OsType      = "Linux"
+    RequestID   = "REQ8380076"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - safe_bengal
