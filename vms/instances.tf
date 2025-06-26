@@ -335,3 +335,24 @@ resource "aws_instance" "wanted_ocelot_vm" {
   }
 }
 # END ANSIBLE MANAGED BLOCK - wanted_ocelot
+# BEGIN ANSIBLE MANAGED BLOCK - aware_osprey
+resource "aws_instance" "aware_osprey_vm" {
+  provider = aws.us_east_1
+
+  ami           = "ami-0dfc569a8686b9320"
+  instance_type = "t2.micro"
+  key_name      = module.us_east_1[0].key_pair_name
+  subnet_id     = module.us_east_1[0].subnet_id
+
+  vpc_security_group_ids = [module.us_east_1[0].security_group_id]
+
+  tags = {
+    Name        = "aware-osprey-VM-us-east-1"
+    Environment = "Development"
+    CreatedBy   = "AAP"
+    Region      = "us-east-1"
+    OsType      = "Linux"
+    RequestID   = "REQ589779365"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - aware_osprey
