@@ -314,3 +314,24 @@ resource "aws_instance" "ruling_turtle_vm" {
   }
 }
 # END ANSIBLE MANAGED BLOCK - ruling_turtle
+# BEGIN ANSIBLE MANAGED BLOCK - wanted_ocelot
+resource "aws_instance" "wanted_ocelot_vm" {
+  provider = aws.us_east_1
+
+  ami           = "ami-0dfc569a8686b9320"
+  instance_type = "t2.micro"
+  key_name      = module.us_east_1[0].key_pair_name
+  subnet_id     = module.us_east_1[0].subnet_id
+
+  vpc_security_group_ids = [module.us_east_1[0].security_group_id]
+
+  tags = {
+    Name        = "wanted-ocelot-VM-us-east-1"
+    Environment = "Development"
+    CreatedBy   = "AAP"
+    Region      = "us-east-1"
+    OsType      = "Linux"
+    RequestID   = "REQ243728702"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - wanted_ocelot
