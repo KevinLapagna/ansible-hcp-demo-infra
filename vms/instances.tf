@@ -385,3 +385,32 @@ resource "aws_instance" "nearby_goose_vm" {
   }
 }
 # END ANSIBLE MANAGED BLOCK - nearby_goose
+# BEGIN ANSIBLE MANAGED BLOCK - proud_mako
+resource "aws_instance" "proud_mako_vm" {
+  provider = aws.eu_central_1
+
+  ami           = "ami-09f31a65dd0bdca78"
+  instance_type = "t3.medium"
+  key_name      = module.eu_central_1[0].key_pair_name
+  subnet_id     = module.eu_central_1[0].subnet_id
+
+  vpc_security_group_ids = [module.eu_central_1[0].windows_winrm_security_group_id]
+
+  # Enable detailed monitoring for Windows instances
+  monitoring = true
+
+  # User data script to configure WinRM with certificate authentication
+  user_data = base64encode(templatefile("${path.module}/windows-winrm-basic.ps1", {
+    certificate_content = file("${path.module}/aap-client-certificate.crt")
+  }))
+
+  tags = {
+    Name        = "proud-mako-VM-eu-central-1"
+    Environment = "Development"
+    CreatedBy   = "AAP"
+    Region      = "eu-central-1"
+    OsType      = "Windows"
+    RequestID   = "REQ739908059"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - proud_mako
