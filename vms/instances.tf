@@ -293,3 +293,24 @@ resource "aws_instance" "picked_swine_vm" {
   }
 }
 # END ANSIBLE MANAGED BLOCK - picked_swine
+# BEGIN ANSIBLE MANAGED BLOCK - ruling_turtle
+resource "aws_instance" "ruling_turtle_vm" {
+  provider = aws.us_east_1
+
+  ami           = "ami-0dfc569a8686b9320"
+  instance_type = "t2.micro"
+  key_name      = module.us_east_1[0].key_pair_name
+  subnet_id     = module.us_east_1[0].subnet_id
+
+  vpc_security_group_ids = [module.us_east_1[0].security_group_id]
+
+  tags = {
+    Name        = "ruling-turtle-VM-us-east-1"
+    Environment = "Development"
+    CreatedBy   = "AAP"
+    Region      = "us-east-1"
+    OsType      = "Linux"
+    RequestID   = "REQ946652176"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - ruling_turtle
