@@ -98,3 +98,24 @@ resource "aws_instance" "wired_tarpon_vm" {
   }
 }
 # END ANSIBLE MANAGED BLOCK - wired_tarpon
+# BEGIN ANSIBLE MANAGED BLOCK - guided_sawfly
+resource "aws_instance" "guided_sawfly_vm" {
+  provider = aws.eu_west_1
+
+  ami           = "ami-0ca386c4436deaf15"
+  instance_type = "t2.micro"
+  key_name      = module.eu_west_1[0].key_pair_name
+  subnet_id     = module.eu_west_1[0].subnet_id
+
+  vpc_security_group_ids = [module.eu_west_1[0].security_group_id]
+
+  tags = {
+    Name        = "guided-sawfly-VM-eu-west-1"
+    Environment = "Development"
+    CreatedBy   = "AAP"
+    Region      = "eu-west-1"
+    OsType      = "Linux"
+    RequestID   = "REQ47789333"
+  }
+}
+# END ANSIBLE MANAGED BLOCK - guided_sawfly
