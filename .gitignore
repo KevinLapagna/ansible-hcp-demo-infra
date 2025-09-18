@@ -1,0 +1,6 @@
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.d/
+.terraform/
+.terraform.lock.hcl
+bootstrap/secrets.auto.tfvars
