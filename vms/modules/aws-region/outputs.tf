@@ -10,7 +10,7 @@ output "subnet_id" {
 
 output "security_group_id" {
   description = "ID of the security group"
-  value       = aws_security_group.allow_ssh.id
+  value       = aws_security_group.allow_inbound.id
 }
 
 output "windows_winrm_security_group_id" {

@@ -69,16 +69,36 @@ resource "aws_route_table_association" "public" {
 }
 
 # ==> Security Group <==
-resource "aws_security_group" "allow_ssh" {
-  name        = "allow-ssh-fedora-${var.region}"
-  description = "Allow SSH inbound traffic"
+resource "aws_security_group" "allow_inbound" {
+  name        = "allow-inbound-rhel-${var.region}"
+  description = "Allow SSH, HTTP, and HTTPS inbound traffic"
   vpc_id      = aws_vpc.main.id
 
+  # SSH
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"] # WARNING: Allows SSH from ANY IP. Restrict this for production.
+    description = "SSH"
+  }
+
+  # HTTP
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "HTTP"
+  }
+
+  # HTTPS
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "HTTPS"
   }
 
   egress {
@@ -89,7 +109,7 @@ resource "aws_security_group" "allow_ssh" {
   }
 
   tags = {
-    Name   = "allow-ssh-fedora-sg-${var.region}"
+    Name   = "allow-inbound-rhel-sg-${var.region}"
     Region = var.region
   }
 }
